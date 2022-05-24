@@ -1,5 +1,6 @@
 import 'package:awesome_select/awesome_select.dart';
 import 'package:flutter/material.dart';
+import 'package:mugu/homePage.dart';
 class first_preferences extends StatefulWidget {
   const first_preferences({Key? key}) : super(key: key);
 
@@ -284,6 +285,9 @@ class _first_preferencesState extends State<first_preferences> {
                       backgroundColor: Colors.blueAccent,
                     ),
                     onPressed: ()=>{
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context)=>const homePage())
+                      )
                     },
                   ),
                 )
