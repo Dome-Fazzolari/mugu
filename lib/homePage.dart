@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mugu/searchHunt.dart';
+import 'package:mugu/userPage.dart';
+import 'package:mugu/userSearched.dart';
+import 'package:mugu/welcome.dart';
 
 class homePage extends StatefulWidget {
   const homePage({Key? key}) : super(key: key);
@@ -35,16 +39,23 @@ class _homePageState extends State<homePage> {
             Card(
               child: ListTile(
                 leading: Icon(Icons.account_circle),
-                onTap: ()=>{},
+                onTap: ()=>{
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context)=>const userPage())
+                  )
+                },
                 title: Text('User profile',style: TextStyle(color: Colors.white,fontSize: 20),),
               ),
               color: Color(0XFF194175),
             ),
             Card(
               child: ListTile(
-                leading: Icon(Icons.settings),
-                onTap: ()=>{},
-                title: Text('Settings',style: TextStyle(color: Colors.white,fontSize: 20),),
+                leading: Icon(Icons.logout,color: Colors.red,),
+                onTap: ()=>{
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=>const welcome()))
+                },
+                title: Text('Log out',style: TextStyle(color: Colors.red,fontSize: 20),),
               ),
               color: Color(0XFF194175),
             ),
@@ -71,7 +82,11 @@ class _homePageState extends State<homePage> {
                     borderRadius: BorderRadius.circular(10)
                 ),
                 child: TextButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context)=>const searchHunt())
+                    )
+                    },
                     child: Text('Search hunt',
                       style: TextStyle(color: Colors.white, fontSize: 40),)),
               ),
@@ -89,16 +104,16 @@ class _homePageState extends State<homePage> {
           Expanded(
             child: ListView(
               children: <Widget>[
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
-                stampaCarta(),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
+                stampaCarta(context),
               ],
             ),
           )
@@ -107,29 +122,36 @@ class _homePageState extends State<homePage> {
     );
   }
 }
-  stampaCarta() {
-    return Card(
-      child: Row(
-        children: [
-          Image(image: AssetImage('assets/LS.png'),height: 75,width: 75,),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 30),),
-              Text('HR: 69',
-                style: TextStyle(color: Colors.grey,fontSize: 15)
-              ),
-            ],
-          ),
-          new Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.favorite,color: Colors.red,size: 45),
-          )
-        ],
+  stampaCarta(context) {
+    return InkWell(
+      onTap: (){
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context)=>const userSearched())
+        );
+      },
+      child: Card(
+        child: Row(
+          children: [
+            Image(image: AssetImage('assets/LS.png'),height: 75,width: 75,),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 30),),
+                Text('HR: 69',
+                  style: TextStyle(color: Colors.grey,fontSize: 15)
+                ),
+              ],
+            ),
+            new Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Icon(Icons.favorite,color: Colors.red,size: 45),
+            )
+          ],
+        ),
+        color: Color(0XFF123057),
       ),
-      color: Color(0XFF123057),
     );
   }
 

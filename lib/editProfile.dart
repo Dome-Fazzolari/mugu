@@ -1,14 +1,15 @@
-import 'package:awesome_select/awesome_select.dart';
 import 'package:flutter/material.dart';
-import 'package:mugu/homePage.dart';
-class first_preferences extends StatefulWidget {
-  const first_preferences({Key? key}) : super(key: key);
+import 'package:awesome_select/awesome_select.dart';
+import 'package:mugu/userPage.dart';
+
+class editProfile extends StatefulWidget {
+  const editProfile({Key? key}) : super(key: key);
 
   @override
-  _first_preferencesState createState() => _first_preferencesState();
+  _editProfileState createState() => _editProfileState();
 }
 
-class _first_preferencesState extends State<first_preferences> {
+class _editProfileState extends State<editProfile> {
   @override
   Widget build(BuildContext context) {
     String? weapon = 'LS';
@@ -44,6 +45,14 @@ class _first_preferencesState extends State<first_preferences> {
 
     return Scaffold(
       backgroundColor: Color(0XFF000F2C),
+      appBar: AppBar(
+        title: Text('Edit profile', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0XFF123057),
+        centerTitle: true,
+        leading: InkWell(
+            onTap: (){Navigator.pop(context);},
+            child:Icon(Icons.arrow_back,color: Colors.white,)),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -52,20 +61,20 @@ class _first_preferencesState extends State<first_preferences> {
               child: Column(
                 children: <Widget>[
                   SizedBox(height: 20,),
-                  Text('Hunter info',style: TextStyle(color: Colors.white,fontSize: 40),),
                   Row(
                     children: [
                       Container(
                         width: 50,
                         child: TextField(
-                          controller: TextEditingController(),
+                          controller: TextEditingController(text: '69'),
                           style: TextStyle(color: Colors.white,fontSize: 20),
+
                           decoration: const InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             labelStyle: TextStyle(color: Colors.white),
                             labelText: 'HR',
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white)
+                                borderSide: BorderSide(color: Colors.white)
                             ),
                             focusedBorder:  UnderlineInputBorder(
                                 borderSide:  BorderSide(color: Colors.white)
@@ -78,20 +87,20 @@ class _first_preferencesState extends State<first_preferences> {
                         child: Container(
                           width: 270,
                           child: TextField(
-                            controller: TextEditingController(),
+                            controller: TextEditingController(text: 'pius#2107'),
                             style: TextStyle(color: Colors.white,fontSize: 20),
                             decoration: const InputDecoration(
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              enabledBorder:UnderlineInputBorder(
-                                  borderSide:  BorderSide(color: Colors.white)
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide:  BorderSide(color: Colors.white)
-                              ),
-                              labelText: 'Discord',
-                              labelStyle: TextStyle(color: Colors.white,fontSize: 20),
-                              hintStyle: TextStyle(color: Colors.grey),
-                              hintText: ' ex. pius#2107'
+                                floatingLabelBehavior: FloatingLabelBehavior.never,
+                                enabledBorder:UnderlineInputBorder(
+                                    borderSide:  BorderSide(color: Colors.white)
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide:  BorderSide(color: Colors.white)
+                                ),
+                                labelText: 'Discord',
+                                labelStyle: TextStyle(color: Colors.white,fontSize: 20),
+                                hintStyle: TextStyle(color: Colors.grey),
+                                hintText: ' ex. pius#2107'
                             ),
                           ),
                         ),
@@ -100,19 +109,19 @@ class _first_preferencesState extends State<first_preferences> {
                   ),
                   Container(
                     width: double.infinity,
-                    child: const TextField(
+                    child:  TextField(
+                      controller: TextEditingController(text: 'epic gamer'),
                       style: TextStyle(color: Colors.white,fontSize: 20),
-                      maxLines: 3,
                       decoration: InputDecoration(
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                          enabledBorder:UnderlineInputBorder(
-                              borderSide:  BorderSide(color: Colors.white)
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide:  BorderSide(color: Colors.white)
-                          ),
-                          labelText: 'Bio',
-                          labelStyle: TextStyle(color: Colors.white,fontSize: 20),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        enabledBorder:UnderlineInputBorder(
+                            borderSide:  BorderSide(color: Colors.white)
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide:  BorderSide(color: Colors.white)
+                        ),
+                        labelText: 'Bio',
+                        labelStyle: TextStyle(color: Colors.white,fontSize: 20),
                       ),
                     ),
                   ),
@@ -128,10 +137,10 @@ class _first_preferencesState extends State<first_preferences> {
 
 
                         modalHeaderStyle: S2ModalHeaderStyle(
-                          textStyle: TextStyle(color: Colors.white)
+                            textStyle: TextStyle(color: Colors.white)
                         ),
                         choiceActiveStyle: S2ChoiceStyle(
-                          color: Colors.white
+                            color: Colors.white
                         ),
                         choiceStyle: S2ChoiceStyle(
                           titleStyle: TextStyle(color: Colors.white),
@@ -139,11 +148,11 @@ class _first_preferencesState extends State<first_preferences> {
                         modalConfig: const S2ModalConfig(
 
                           headerStyle:  S2ModalHeaderStyle(
-                            backgroundColor: Color(0XFF000F2C),
-                            textStyle: TextStyle(color: Colors.white)
+                              backgroundColor: Color(0XFF000F2C),
+                              textStyle: TextStyle(color: Colors.white)
                           ),
                           style: S2ModalStyle(
-                              backgroundColor: Color(0XFF000F2C),
+                            backgroundColor: Color(0XFF000F2C),
                           ),
                         ),
                       ),
@@ -221,7 +230,7 @@ class _first_preferencesState extends State<first_preferences> {
                           child: Container(
                             width: 50,
                             child: TextField(
-                              controller: TextEditingController(),
+                              controller: TextEditingController(text: '14'),
                               style: TextStyle(color: Colors.white,fontSize: 20),
                               decoration: const InputDecoration(
                                 floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -250,7 +259,7 @@ class _first_preferencesState extends State<first_preferences> {
                           child: Container(
                             width: 50,
                             child: TextField(
-                              controller: TextEditingController(),
+                              controller: TextEditingController(text: '20'),
                               style: TextStyle(color: Colors.white,fontSize: 20),
                               decoration: const InputDecoration(
                                 floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -275,7 +284,7 @@ class _first_preferencesState extends State<first_preferences> {
                       child: Container(
                         width: 250,
                         child: Center(
-                          child: Text("FINISH"),
+                          child: Text("Confirm edit"),
                         ),
                       ),
                       style: TextButton.styleFrom(
@@ -284,7 +293,7 @@ class _first_preferencesState extends State<first_preferences> {
                       ),
                       onPressed: ()=>{
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=>const homePage())
+                            MaterialPageRoute(builder: (context)=>userPage())
                         )
                       },
                     ),

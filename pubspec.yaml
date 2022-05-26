@@ -16,7 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   awesome_select: ^5.2.0
   flow_builder: ^0.0.8
-
+  after_layout: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

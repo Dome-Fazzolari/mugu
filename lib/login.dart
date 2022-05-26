@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mugu/homePage.dart';
 
 class login extends StatelessWidget {
   const  login({Key? key}) : super(key: key);
@@ -60,7 +61,11 @@ class login extends StatelessWidget {
                       primary: Colors.white,
                       backgroundColor: Colors.blueAccent,
                     ),
-                    onPressed: ()=>{},
+                    onPressed: ()=>{
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context)=>const homePage())
+                      )
+                    },
                   ),
                 TextButton(
                   onPressed: ()=>{},

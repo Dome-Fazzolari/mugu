@@ -5,6 +5,7 @@ import 'package:mugu/signin.dart';
 class welcome extends StatelessWidget {
   const welcome({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,8 +17,15 @@ class welcome extends StatelessWidget {
     );
   }
 }
-class _welcome extends StatelessWidget {
+class _welcome extends StatefulWidget {
   const _welcome({Key? key}) : super(key: key);
+
+  @override
+  State<_welcome> createState() => _welcomeState();
+}
+
+class _welcomeState extends State<_welcome> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +67,7 @@ class _welcome extends StatelessWidget {
                     Navigator.push(context,
                     MaterialPageRoute(builder: (context)=>const signin())
                     )
-                    
+
                   },
                   child: Text("New user? Sign In",style: TextStyle(color: Colors.white),),
                 )
@@ -67,6 +75,30 @@ class _welcome extends StatelessWidget {
             ),
 
       ),
+    );
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    Future.delayed(Duration.zero,()=>{messaggio()});
+  }
+
+  void messaggio() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Attenzione'),
+          content: const Text('Questa versione è ancora in fase di sviluppo ed è solo una dimostrazione della grafica,spero possa comprendere'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Va bene'),
+            )
+          ],
+        );
+      },
     );
   }
 }
