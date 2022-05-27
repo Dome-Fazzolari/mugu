@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mugu/homePage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'serverRequests.dart' as sr;
 
-class login extends StatelessWidget {
+class login extends StatefulWidget {
   const  login({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final mailController = TextEditingController();
-    final passwordController = TextEditingController();
+  State<login> createState() => _loginState();
+}
 
+class _loginState extends State<login> {
+  @override
+  Widget build(BuildContext context) {
+    bool isLoginButtonLoading = false;
+    final mailController = TextEditingController(text: 'domenicofazzolari03@gmail.com');
+    final passwordController = TextEditingController(text: 'password');
     return Container(
         constraints: const BoxConstraints.expand(),
       decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/sfondo.png'))),
@@ -26,6 +33,7 @@ class login extends StatelessWidget {
                   width: 300,
                   child: TextField(
                     controller: mailController,
+                    style: TextStyle(color: Colors.white,fontSize: 18),
                     decoration:  const InputDecoration(
                         border: UnderlineInputBorder(),
                         labelText: 'Email',
@@ -40,6 +48,7 @@ class login extends StatelessWidget {
                   width: 300,
                   child: TextField(
                     controller: passwordController,
+                    style: TextStyle(color: Colors.white,fontSize: 18),
                     decoration:  const InputDecoration(
                         border: UnderlineInputBorder(),
                         labelText: 'Password',
@@ -50,7 +59,9 @@ class login extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 20.0,),
-                TextButton(
+                isLoginButtonLoading
+                ?CircularProgressIndicator()
+                    :TextButton(
                     child: Container(
                       width: 250,
                       child: Center(
@@ -61,10 +72,44 @@ class login extends StatelessWidget {
                       primary: Colors.white,
                       backgroundColor: Colors.blueAccent,
                     ),
-                    onPressed: ()=>{
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context)=>const homePage())
-                      )
+                    onPressed: () async {
+                      Future.delayed(Duration.zero,()async{
+                        if(mailController.text.isNotEmpty || passwordController.text.isNotEmpty){
+                          var map = await sr.login(
+                              mailController.text, passwordController.text,
+                              '192.168.1.74');
+                          if (map['status']?.compareTo('success') == 0) {
+                            var prefs = await SharedPreferences.getInstance();
+                            String cookie = map['cookie'] ?? '';
+                            prefs.setString('PHPSESSID', cookie);
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(
+                                    builder: (context) => const homePage())
+                            );
+                          } else {
+                            String status = map['status'] ?? 'Error';
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return  AlertDialog(
+                                    title: Text(status),
+                                    content: Text(map[status] ?? 'An uninidentified error occourred'),
+                                  );
+                                });
+                          }
+                        }else{
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AlertDialog(
+                                  title: Text("Error"),
+                                  content: Text(
+                                      "You have to insert both email and password"),
+                                );
+                              });
+                        }
+                      });
+
                     },
                   ),
                 TextButton(

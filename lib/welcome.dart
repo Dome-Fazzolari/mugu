@@ -78,29 +78,7 @@ class _welcomeState extends State<_welcome> {
     );
   }
 
-  @override
-  void initState(){
-    super.initState();
-    Future.delayed(Duration.zero,()=>{messaggio()});
-  }
 
-  void messaggio() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Attenzione'),
-          content: const Text('Questa versione è ancora in fase di sviluppo ed è solo una dimostrazione della grafica,spero possa comprendere'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Va bene'),
-            )
-          ],
-        );
-      },
-    );
-  }
 }
 
 
