@@ -1,6 +1,8 @@
 import 'package:flow_builder/flow_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:mugu/first_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'serverRequests.dart'as sr;
 
 class signin extends StatefulWidget {
   const signin({Key? key}) : super(key: key);
@@ -174,10 +176,48 @@ class _credentialsFormState extends State<credentialsForm> {
                     primary: Colors.white,
                     backgroundColor: Colors.blueAccent,
                   ),
-                  onPressed: ()=>{
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=>const first_preferences())
-                    )
+                  onPressed: () async {
+                    if(
+                      emailController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty &&
+                      usernameController.text.isNotEmpty
+                    ){
+                      var signinresult = await sr.signin(
+                          emailController.text,
+                          passwordController.text,
+                          usernameController.text,
+                          '192.168.1.74'
+                      );
+                      if(signinresult['status'].toString().compareTo('success') == 0){
+                        var prefs = await SharedPreferences.getInstance();
+                        prefs.setString('username', usernameController.text);
+                        prefs.setString('user_id', signinresult['user_id'].toString());
+                        prefs.setString('cookie', signinresult['cookie']);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context)=>const first_preferences())
+                        );
+                      }else{
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(signinresult['status'] ?? ''),
+                                content: Text(signinresult[signinresult['status']] ?? ''),
+                              );
+                            });
+                      }
+
+                    }else{
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const AlertDialog(
+                              title: Text("Error"),
+                              content: Text(
+                                  "Insert your SignIn info"),
+                            );
+                          });
+                    }
                   },
                 )
               ],

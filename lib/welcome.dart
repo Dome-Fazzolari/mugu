@@ -64,7 +64,7 @@ class _welcomeState extends State<_welcome> {
                 ),
                 TextButton(
                   onPressed: ()=>{
-                    Navigator.push(context,
+                    Navigator.pushReplacement(context,
                     MaterialPageRoute(builder: (context)=>const signin())
                     )
 

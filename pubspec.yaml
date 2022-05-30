@@ -31,5 +31,6 @@ flutter:
 
   assets:
     - assets/
+    - assets/weapon_logo/
 
   uses-material-design: true

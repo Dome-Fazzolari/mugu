@@ -13,7 +13,7 @@ Future<bool> logout(String Server,String cookie)async{
   return false;
 }
 
-void edit_profile(
+Future<Map<String,dynamic>> edit_profile(
     String username,
     String discord_data,
     String bio_personale,
@@ -40,23 +40,19 @@ void edit_profile(
       Uri.parse('http://$Server/mhgh_api/edit_profile.php'),
       body: body,
       headers: {'Cookie': '$cookie'});
+  var risposta = jsonDecode(response.body);
   if (response.statusCode == 200) {
-    switch (jsonDecode(response.body)['status']) {
-      case 'failed':
-        print('Failed, reson: ' + jsonDecode(response.body)['reason']);
-        break;
-      case 'error':
-        print('Error, Error: ' + jsonDecode(response.body)['error']);
-        break;
-      case 'success':
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print('Stato: ' + jsonDecode(response.body)['status']);
-        break;
-    }
+    risposta['status'] = jsonDecode(response.body)['status'];
+    risposta['failed'] = jsonDecode(response.body)['reason'] ?? '';
+    risposta['error'] = jsonDecode(response.body)['error'] ?? '';
+  }else{
+    risposta['status'] =  'error';
+    risposta['error'] = 'unidentified error';
   }
+  return risposta;
 }
 
-Future<String> signin(
+Future<Map<String,dynamic>> signin(
     String email, String password, String username, String Server) async {
   var body = Map<String, dynamic>();
   body['username'] = username;
@@ -65,24 +61,20 @@ Future<String> signin(
 
   http.Response response = await http
       .post(Uri.parse('http://$Server/mhgh_api/signin.php'), body: body);
+  var risposta = jsonDecode(response.body);
   if (response.statusCode == 200) {
-    switch (jsonDecode(response.body)['status']) {
-      case 'failed':
-        print('Failed, reson: ' + jsonDecode(response.body)['reason']);
-        break;
-      case 'error':
-        print('Error, Error: ' + jsonDecode(response.body)['error']);
-        break;
-      case 'success':
-        Map<String, dynamic> json = jsonDecode(response.body);
-        print('Signin Stato: ' + json['status'].toString());
-        break;
-    }
-  }
-  String cookie = response.headers['set-cookie']?.split(';')[0] ?? 'vuoto';
+    String cookie = response.headers['set-cookie']?.split(';')[0] ?? '';
 
-  print('Singin Cookie: $cookie');
-  return cookie;
+    risposta['status'] = jsonDecode(response.body)['status'];
+    risposta['failed'] = jsonDecode(response.body)['reason'] ?? '';
+    risposta['error'] = jsonDecode(response.body)['error'] ?? '';
+    risposta['user_id'] = jsonDecode(response.body)['user_id'] ?? '';
+    risposta['cookie'] = cookie;
+  }else{
+    risposta['status'] =  'error';
+    risposta['error'] = 'unidentified error';
+  }
+  return risposta;
 }
 
 Future<Map<String,String>> login(String email, String password, String Server) async {
@@ -109,6 +101,7 @@ Future<Map<String,String>> login(String email, String password, String Server) a
         Map<String, dynamic> json = jsonDecode(response.body);
         var map = Map<String,String>();
         map['status'] = 'success';
+        map['user_id'] = jsonDecode(response.body)['user_id'].toString();
         map['cookie'] = response.headers['set-cookie']!.split(';')[0];
         return map;
     }
@@ -129,28 +122,33 @@ Future<bool> login_cookie(String Server, String Cookie) async {
   }else return false;
 }
 
-void user() async {
-  String user_id = '1001';
+Future<Map<String,dynamic>> user(String user_id,String Server) async {
   http.Response response = await http
-      .get(Uri.parse('http://192.168.1.74/mhgh_api/user.php?user_id=$user_id'));
-
+      .get(Uri.parse('http://$Server/mhgh_api/user.php?user_id=$user_id'));
+  var risposta = Map<String,dynamic>();
+  print(response.statusCode);
   if (response.statusCode == 200) {
     Map<String, dynamic> json = jsonDecode(response.body);
-    print('Stato: ' + json['status'].toString());
-    if (json['result'].toString() != 'none') {
-      print('Username: ' + json['result']['username']);
-      print('discord_data: ' + json['result']['discord_data']);
-      print('bio_personale: ' + json['result']['bio_personale']);
-      print('arma_preferita: ' + json['result']['arma_preferita']);
-      print('preferenze_caccia: ' + json['result']['preferenze_caccia']);
-      print('orario_libero_inizio: ' +
-          json['result']['orario_libero_inizio'].toString());
-      print('orario_libero_fine: ' +
-          json['result']['orario_libero_fine'].toString());
-      print('HR: ' + json['result']['HR'].toString());
-      print('piattaforma: ' + json['result']['piattaforma']);
+    risposta['status'] = json['status'].toString();
+    if (json['result'].toString().compareTo('none') != 0) {
+      risposta['noResults'] = false;
+      risposta['username'] = json['result']['username'];
+      risposta['discord_data'] = json['result']['discord_data'];
+      risposta['bio_personale'] = json['result']['bio_personale'];
+      risposta['arma_preferita'] = json['result']['arma_preferita'];
+      risposta['preferenze_caccia'] = json['result']['preferenze_caccia'];
+      risposta['orario_libero_inizio'] = json['result']['orario_libero_inizio'].toString();
+      risposta['orario_libero_fine'] = json['result']['orario_libero_fine'].toString();
+      risposta['HR'] = json['result']['HR'].toString();
+      risposta['piattaforma'] = json['result']['piattaforma'];
+    }else{
+      risposta['noResults'] = true;
     }
+  }else{
+    risposta['status'] = 'error';
+    risposta['error'] = 'unidentified error';
   }
+  return risposta;
 }
 
 void search_hunt() async {

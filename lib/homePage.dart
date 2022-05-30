@@ -16,9 +16,24 @@ class homePage extends StatefulWidget {
   _homePageState createState() => _homePageState();
 }
 
+String username = 'User';
+
+
 class _homePageState extends State<homePage> {
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.endOfFrame.then(
+          (_) {
+        if (mounted) setUsername(context);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context){
+
     return Scaffold(
         drawer: Drawer(
           child: ListView(
@@ -34,9 +49,9 @@ class _homePageState extends State<homePage> {
                   )
                 ),
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 10.0,bottom: 10),
-                child: Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 40),),
+                child: Text('$username',style: TextStyle(color: Colors.white,fontSize: 40),),
               ),
               Card(
                 child: ListTile(
@@ -58,10 +73,9 @@ class _homePageState extends State<homePage> {
                     String sess = prefs.getString('PHPSESSID') ?? '';
                     bool risultato = await logout('192.168.1.74', sess);
                     if(risultato){
-                      prefs.remove('PHPSESSID');
-                      Navigator.pushAndRemoveUntil(context,
-                        MaterialPageRoute(builder: (context)=>const welcome()),
-                            (Route<dynamic> route) => false,);
+                      await prefs.clear();
+                      Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context)=>const welcome()));
                     }
                   },
                   title: Text('Log out',style: TextStyle(color: Colors.red,fontSize: 20),),
@@ -129,6 +143,15 @@ class _homePageState extends State<homePage> {
           ],
         ),
     );
+
+  }
+
+
+  void setUsername(BuildContext context)async{
+    var prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? 'balls';
+    });
   }
 }
   stampaCarta(context) {
@@ -141,7 +164,7 @@ class _homePageState extends State<homePage> {
       child: Card(
         child: Row(
           children: [
-            Image(image: AssetImage('assets/LS.png'),height: 75,width: 75,),
+            Image(image: AssetImage('assets/weapon_logo/LS.png'),height: 75,width: 75,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
