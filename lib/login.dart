@@ -101,19 +101,12 @@ class _loginState extends State<login> {
                                       );
                                     });
                               }else{
-                                var precc = Map<String,String>();
-                                precc['FFN'] = 'For fun';
-                                precc['TRH'] = 'Tryhard';
-                                precc['GRD'] = 'Grind';
-                                precc['GVH'] = 'Giving help';
-                                precc['SRH'] = 'Searching help';
 
-                                print("Username: "+datiUtente['username']);
                                 prefs.setString('username', datiUtente['username']);
                                 prefs.setString('discord_data', datiUtente['discord_data']);
                                 prefs.setString('bio_personale', datiUtente['bio_personale']);
                                 prefs.setString('arma_preferita', datiUtente['arma_preferita']);
-                                prefs.setString('preferenze_caccia', precc[datiUtente['preferenze_caccia']] ?? 'For fun');
+                                prefs.setString('preferenze_caccia', datiUtente['preferenze_caccia']);
                                 prefs.setInt('orario_libero_inizio', int.parse(datiUtente['orario_libero_inizio']));
                                 prefs.setInt('orario_libero_fine', int.parse(datiUtente['orario_libero_fine']));
                                 prefs.setInt('HR', int.parse(datiUtente['HR']));

@@ -1,7 +1,9 @@
 import 'package:awesome_select/awesome_select.dart';
 import 'package:flutter/material.dart';
 import 'package:mugu/homePage.dart';
+import 'package:mugu/serverRequests.dart';
 import 'package:mugu/userSearched.dart';
+import 'serverRequests.dart' as sr;
 
 class searchHunt extends StatefulWidget {
   const searchHunt({Key? key}) : super(key: key);
@@ -10,20 +12,21 @@ class searchHunt extends StatefulWidget {
   _searchHuntState createState() => _searchHuntState();
 }
 
+List<Widget> utenti = [];
+String preferences = 'FFN';
+List<S2Choice<String>> preferenze_caccia = [
+  S2Choice<String>(value: 'FFN', title: 'For fun'),
+  S2Choice<String>(value: 'TRH', title: 'Tryhard'),
+  S2Choice<String>(value: 'GRD', title: 'Grind'),
+  S2Choice<String>(value: 'GVH', title: 'Giving help'),
+  S2Choice<String>(value: 'SRH', title: 'Searching help')
+];
+double _currentSliderValue = 0;
+
+bool _isLoaded = false;
+bool _isSearched = false;
+
 class _searchHuntState extends State<searchHunt> {
-  String preferences = 'FFN';
-  List<S2Choice<String>> preferenze_caccia = [
-    S2Choice<String>(value: 'FFN', title: 'For fun'),
-    S2Choice<String>(value: 'TRH', title: 'Tryhard'),
-    S2Choice<String>(value: 'GRD', title: 'Grind'),
-    S2Choice<String>(value: 'GVH', title: 'Giving help'),
-    S2Choice<String>(value: 'SRH', title: 'Searching help')
-  ];
-
-  double _currentSliderValue = 0;
-
-  bool _isLoaded = false;
-  bool _isSearched = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,35 @@ class _searchHuntState extends State<searchHunt> {
                     choiceItems: preferenze_caccia,
                     onChange: (state)=>setState(() {
                       preferences = state.value ?? 'FFN';
+
                     }),
+                    modalType: S2ModalType.bottomSheet,
+                    tileBuilder: (context, state) {
+                      return S2Tile.fromState(
+                        state,
+                        title: Text( 'Hunt preferences',
+                            style: TextStyle(color: Colors.white)),
+                      );
+                    },
+
+                    modalHeaderStyle: const S2ModalHeaderStyle(
+                        textStyle: TextStyle(color: Colors.white)
+                    ),
+                    choiceActiveStyle: const S2ChoiceStyle(
+                      color: Colors.white,
+                    ),
+                    choiceStyle: const S2ChoiceStyle(
+                      titleStyle: TextStyle(color: Colors.white),
+                    ),
+                    modalConfig: const S2ModalConfig(
+                      headerStyle:  S2ModalHeaderStyle(
+                          backgroundColor: Color(0XFF000F2C),
+                          textStyle: TextStyle(color: Colors.white)
+                      ),
+                      style: S2ModalStyle(
+                        backgroundColor: Color(0XFF000F2C),
+                      ),
+                    ),
                   )
                 ),
                 Padding(
@@ -89,16 +120,17 @@ class _searchHuntState extends State<searchHunt> {
                 ),
                 Center(
                   child: InkWell(
-                    onTap: (){
+                    onTap: ()async{
                       setState(() {
                         _isSearched = true;
                         _isLoaded = false;
                       });
-                      Future.delayed(Duration(seconds: 2),(){
-                        setState(() {
-                          _isLoaded = true;
-                        });
+                      var users = await caricaRicerca(context, preferences, _currentSliderValue.toString());
+                      setState(() {
+                        utenti = users;
+                        _isLoaded = true;
                       });
+
                     },
                     child: Container(
                       padding: EdgeInsets.all(10),
@@ -116,15 +148,7 @@ class _searchHuntState extends State<searchHunt> {
           _isLoaded
           ?Expanded(
             child: ListView(
-              children: [
-                stampaCarta(context),
-                stampaCarta(context),
-                stampaCarta(context),
-                stampaCarta(context),
-                stampaCarta(context),
-                stampaCarta(context),
-                stampaCarta(context),
-              ],
+              children: utenti,
             ),
           )
           : _isSearched
@@ -139,23 +163,23 @@ class _searchHuntState extends State<searchHunt> {
   }
 }
 
-stampaCarta(context) {
+stampaCarta(context,String arma,String HR,String username,String user_id) {
   return InkWell(
     onTap: (){
       Navigator.push(context,
-          MaterialPageRoute(builder: (context)=>const userSearched())
+          MaterialPageRoute(builder: (context)=>userSearched(user_id: user_id))
       );
     },
     child: Card(
       child: Row(
         children: [
-          Image(image: AssetImage('assets/LS.png'),height: 75,width: 75,),
+          Image(image: AssetImage('assets/weapon_logo/$arma.png'),height: 75,width: 75,),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 30),),
-              Text('HR: 69',
+              Text('$username',style: TextStyle(color: Colors.white,fontSize: 30),),
+              Text('HR: $HR',
                   style: TextStyle(color: Colors.grey,fontSize: 15)
               ),
             ],
@@ -163,11 +187,25 @@ stampaCarta(context) {
           new Spacer(),
           Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: Icon(Icons.favorite_outline,color: Colors.grey,size: 45),
+            child: Icon(Icons.favorite,color: Colors.red,size: 45),
           )
         ],
       ),
       color: Color(0XFF123057),
     ),
   );
+}
+
+Future<List<Widget>> caricaRicerca(BuildContext context,String preferences,String HR)async{
+  List<userTile> utenti = await sr.search_hunt(preferences,HR);
+
+  List<Widget> carte = [];
+  if(utenti.length > 0){
+    for(int i = 0;i<utenti.length;i++){
+      carte.add(stampaCarta(context, utenti[i].weapon, utenti[i].hr, utenti[i].username, utenti[i].user_id.toString()));
+    }
+  }else{
+    carte.add(Center(child: Text('No results',style: TextStyle(color: Colors.white,fontSize: 30),),));
+  }
+  return carte;
 }

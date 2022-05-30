@@ -11,6 +11,11 @@ class welcome extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textTheme: TextTheme(
+
+          bodyText1: TextStyle(color: Colors.white),
+          bodyText2: TextStyle(color: Colors.white),
+        ),
         primarySwatch: Colors.grey,
       ),
       home: _welcome(),

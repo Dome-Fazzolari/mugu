@@ -1,16 +1,36 @@
 import 'package:flutter/material.dart';
+import 'serverRequests.dart' as sr;
 
 class userSearched extends StatefulWidget {
-  const userSearched({Key? key}) : super(key: key);
+  final String user_id;
+  userSearched({Key? key,required this.user_id}) : super(key: key);
 
   @override
   _userSearchedState createState() => _userSearchedState();
 }
 
+String username = '';
+String weapon = '';
+String discord = '';
+String bio = '';
+String HR = '';
+String preferences = '';
+String onTime = '';
+
 class _userSearchedState extends State<userSearched> {
-  var isSameUser = true;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.endOfFrame.then(
+          (_) {
+        if (mounted) layData(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('user: '+widget.user_id);
     return Scaffold(
       backgroundColor: Color(0XFF000F2C),
       appBar: AppBar(
@@ -37,8 +57,8 @@ class _userSearchedState extends State<userSearched> {
               padding: const EdgeInsets.only(left: 10.0,top: 10),
               child: Row(
                 children: [
-                  Image(image: AssetImage('assets/LS.png'),height: 50,width: 50,),
-                  Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 50),),
+                  Image(image: AssetImage('assets/weapon_logo/$weapon.png'),height: 50,width: 50,),
+                  Text('$username',style: TextStyle(color: Colors.white,fontSize: 40),overflow: TextOverflow.ellipsis,),
                   new Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0,right: 10),
@@ -48,7 +68,7 @@ class _userSearchedState extends State<userSearched> {
                       child: Container(
                         width: 50,
                         height: 50,
-                        child: Icon(Icons.favorite,color: Colors.red,size: 40,),
+                        child: Icon(Icons.favorite_outline,size: 40,),
                       ),
                     ),
                   ),
@@ -57,7 +77,7 @@ class _userSearchedState extends State<userSearched> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0),
-              child: Text('Ｐｉｕｓ#2107',style: TextStyle(color: Colors.grey,fontSize: 18),),
+              child: Text('$discord',style: TextStyle(color: Colors.grey,fontSize: 18),),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20,left: 10,right: 10),
@@ -77,7 +97,7 @@ class _userSearchedState extends State<userSearched> {
 
                         ),
                       ),
-                      Text('Epic gamer gaming',
+                      Text('$bio',
                         style: TextStyle(color: Colors.white,fontSize: 18),
                       ),
                       SizedBox(height: 50,),
@@ -89,9 +109,9 @@ class _userSearchedState extends State<userSearched> {
                           color: Color(0XFF123057),
                         ),
                       ),
-                      Text('HR: 69',style: TextStyle(color: Colors.white,fontSize: 18),),
-                      Text('Gameplay preferences: for fun',style: TextStyle(color: Colors.white,fontSize: 18),),
-                      Text('Online time: 12-18',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      Text('HR: $HR',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      Text('Gameplay preferences: $preferences',style: TextStyle(color: Colors.white,fontSize: 18),),
+                      Text('Online time: $onTime',style: TextStyle(color: Colors.white,fontSize: 18),),
                     ],
                   ),
                 ),
@@ -101,5 +121,24 @@ class _userSearchedState extends State<userSearched> {
         ),
       ),
     );
+  }
+
+  void layData (BuildContext context)async{
+    var precc = Map<String,String>();
+    precc['FFN'] = 'For fun';
+    precc['TRH'] = 'Tryhard';
+    precc['GRD'] = 'Grind';
+    precc['GVH'] = 'Giving help';
+    precc['SRH'] = 'Searching help';
+    var datiUtente = await sr.user(widget.user_id,'192.168.1.74');
+    setState(() {
+      username = datiUtente['username'];
+      weapon = datiUtente['arma_preferita'];
+      discord = datiUtente['discord_data'];
+      bio = datiUtente['bio_personale'];
+      HR = datiUtente['HR'];
+      preferences = precc[datiUtente['preferenze_caccia']] ?? '';
+      onTime =datiUtente['orario_libero_inizio'] + '-' + datiUtente['orario_libero_fine'];
+    });
   }
 }

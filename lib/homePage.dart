@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mugu/searchHunt.dart';
 import 'package:mugu/serverRequests.dart';
+import 'package:mugu/signin.dart';
 import 'package:mugu/userPage.dart';
 import 'package:mugu/userSearched.dart';
 import 'package:mugu/welcome.dart';
@@ -17,7 +18,8 @@ class homePage extends StatefulWidget {
 }
 
 String username = 'User';
-
+bool isFavLoaded = false;
+List<Widget> utenti = [];
 
 class _homePageState extends State<homePage> {
 
@@ -25,8 +27,18 @@ class _homePageState extends State<homePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.endOfFrame.then(
-          (_) {
-        if (mounted) setUsername(context);
+          (_)async {
+        if (mounted) {
+          var prefs = await SharedPreferences.getInstance();
+          setState(() {
+            username = prefs.getString('username') ?? 'balls';
+          });
+          var users = await caricaPreferiti(context);
+          setState(() {
+            utenti = users;
+            isFavLoaded = true;
+          });
+        };
       },
     );
   }
@@ -124,21 +136,13 @@ class _homePageState extends State<homePage> {
                 ),
               ],
             ),
-            Expanded(
-              child: ListView(
-                children: <Widget>[
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                  stampaCarta(context),
-                ],
-              ),
+            isFavLoaded
+            ? Expanded(
+                child: ListView(
+                  children: utenti,
+                ))
+            : Center(
+              child: CircularProgressIndicator(),
             )
           ],
         ),
@@ -147,30 +151,24 @@ class _homePageState extends State<homePage> {
   }
 
 
-  void setUsername(BuildContext context)async{
-    var prefs = await SharedPreferences.getInstance();
-    setState(() {
-      username = prefs.getString('username') ?? 'balls';
-    });
-  }
 }
-  stampaCarta(context) {
+  stampaCarta(context,String arma,String HR,String username,String user_id) {
     return InkWell(
       onTap: (){
         Navigator.push(context,
-            MaterialPageRoute(builder: (context)=>const userSearched())
+            MaterialPageRoute(builder: (context)=>userSearched(user_id: user_id))
         );
       },
       child: Card(
         child: Row(
           children: [
-            Image(image: AssetImage('assets/weapon_logo/LS.png'),height: 75,width: 75,),
+            Image(image: AssetImage('assets/weapon_logo/$arma.png'),height: 75,width: 75,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Arogen',style: TextStyle(color: Colors.white,fontSize: 30),),
-                Text('HR: 69',
+                Text('$username',style: TextStyle(color: Colors.white,fontSize: 30),),
+                Text('HR: $HR',
                   style: TextStyle(color: Colors.grey,fontSize: 15)
                 ),
               ],
@@ -186,4 +184,19 @@ class _homePageState extends State<homePage> {
       ),
     );
   }
+Future<List<Widget>> caricaPreferiti(BuildContext context)async{
+  List<userTile> utenti = await home();
+
+  List<Widget> carte = [];
+  if(utenti.length > 0){
+    for(int i = 0;i<utenti.length;i++){
+      carte.add(stampaCarta(context, utenti[i].weapon, utenti[i].hr, utenti[i].username, utenti[i].user_id.toString()));
+    }
+  }else{
+    carte.add(Center(child: Text('No favourites',style: TextStyle(color: Colors.white,fontSize: 30),),));
+  }
+  return carte;
+}
+
+
 

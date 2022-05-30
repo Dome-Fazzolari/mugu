@@ -63,7 +63,7 @@ class _userPageState extends State<userPage> {
               child: Row(
                 children: [
                   Image(image: AssetImage('assets/weapon_logo/$weapon.png'),height: 50,width: 50,),
-                  Text('$username',style: TextStyle(color: Colors.white,fontSize: 50),),
+                  Text('$username',style: TextStyle(color: Colors.white,fontSize: 40),),
                   new Spacer(),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0,right: 10),
@@ -71,7 +71,7 @@ class _userPageState extends State<userPage> {
                       splashFactory: NoSplash.splashFactory,
                       onTap: (){
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context)=>const editProfile()));
+                            MaterialPageRoute(builder: (context)=> editProfile()));
                       },
                       child: Container(
                         width: 50,
@@ -137,13 +137,19 @@ class _userPageState extends State<userPage> {
 
   void layData (BuildContext context)async{
     var prefs = await SharedPreferences.getInstance();
+    var precc = Map<String,String>();
+    precc['FFN'] = 'For fun';
+    precc['TRH'] = 'Tryhard';
+    precc['GRD'] = 'Grind';
+    precc['GVH'] = 'Giving help';
+    precc['SRH'] = 'Searching help';
     setState(() {
       username = prefs.getString('username') ?? 'user_error';
       weapon = prefs.getString('arma_preferita') ?? 'LS';
       discord = prefs.getString('discord_data') ?? 'data_error';
       bio = prefs.getString('bio_personale') ?? 'bio_error';
       HR = prefs.getInt('HR').toString();
-      preferences = prefs.getString('preferenze_caccia') ?? 'preferences_error';
+      preferences = precc[prefs.getString('preferenze_caccia')] ?? 'preferences_error';
       onTime = prefs.getInt('orario_libero_inizio').toString()+"-"+prefs.getInt('orario_libero_fine').toString();
     });
   }

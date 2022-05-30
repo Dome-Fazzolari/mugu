@@ -1,7 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+
+class userTile{
+
+  String username = '';
+  String weapon = '';
+  String user_id = '';
+  String hr = '';
+
+  userTile(this.username, this.weapon, this.hr,this.user_id);
+}
+
 
 Future<bool> logout(String Server,String cookie)async{
   http.Response response = await http.post(
@@ -151,41 +164,47 @@ Future<Map<String,dynamic>> user(String user_id,String Server) async {
   return risposta;
 }
 
-void search_hunt() async {
-  String preferenza = 'ffn';
-  int HRMinimo = 1;
+Future<List<userTile>> search_hunt(String preferenza,String HRMinimo) async {
+  List<userTile> utenti = [];
+  var prefs = await SharedPreferences.getInstance();
   http.Response response = await http.get(
       Uri.parse(
           'http://192.168.1.74/mhgh_api/search_hunt.php?preferenze_caccia=$preferenza&HR=$HRMinimo'),
-      headers: {'Cookie': 'PHPSESSID=2qjkhcf6lr82tut7rhianigsji'});
+      headers: {'Cookie': prefs.getString('PHPSESSID') ?? ''});
   Map<String, dynamic> json = jsonDecode(response.body);
-  print('Stato: ' + json['status'].toString());
-  print(response.body);
   if (response.statusCode == 200) {
-    for (int i = 0; i < (json['results'] as List).length; i++) {
-      print('-----user $i-----');
-      print('Username: ' + json['results'][i]['username']);
-      print('arma preferita: ' + json['results'][i]['arma_preferita']);
-      print('User id: ' + json['results'][i]['fk_credenziali'].toString());
+    if(json['results'].toString().compareTo('none')!=0){
+      for (int i = 0; i < (json['results'] as List).length; i++) {
+        utenti.add(
+            userTile(json['results'][i]['username'],
+                json['results'][i]['arma_preferita'],
+                json['results'][i]['HR'].toString(),
+                json['results'][i]['fk_credenziali'].toString()));
+      }
     }
   }
+  return utenti;
 }
 
-void home() async {
+Future<List<userTile>> home() async {
+  List<userTile> utenti = [];
+  var prefs = await SharedPreferences.getInstance();
   http.Response response = await http.get(
       Uri.parse('http://192.168.1.74/mhgh_api/home.php?'),
-      headers: {'Cookie': 'PHPSESSID=2qjkhcf6lr82tut7rhianigsji'});
+      headers: {'Cookie': prefs.getString('PHPSESSID') ?? ''});
   Map<String, dynamic> json = jsonDecode(response.body);
-  print('Stato: ' + json['status'].toString());
-  print(response.body);
   if (response.statusCode == 200) {
-    for (int i = 0; i < (json['results'] as List).length; i++) {
-      print('-----user $i-----');
-      print('Username: ' + json['results'][i]['username']);
-      print('arma preferita: ' + json['results'][i]['arma_preferita']);
-      print('User id: ' + json['results'][i]['fk_credenziali'].toString());
+    if(json['results'].toString().compareTo('none')!=0){
+      for (int i = 0; i < (json['results'] as List).length; i++) {
+        utenti.add(
+            userTile(json['results'][i]['username'],
+                json['results'][i]['arma_preferita'],
+                json['results'][i]['HR'].toString(),
+                json['results'][i]['fk_credenziali'].toString()));
+      }
     }
   }
+  return utenti;
 }
 
 void add_favourites() async {

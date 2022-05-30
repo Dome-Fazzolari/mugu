@@ -135,7 +135,7 @@ class _first_preferencesState extends State<first_preferences> {
                         selectedValue: 'LS',
                         choiceItems: armi,
                         onChange: (state) {
-                          weapon = state.value.toString() ?? 'LS'; //definitely not my favoutite weapon
+                          weapon = state.value.toString() ; //definitely not my favoutite weapon
                           setState(() => weapon = state.value.toString());
                           print(weapon);
                           },
@@ -170,8 +170,8 @@ class _first_preferencesState extends State<first_preferences> {
                         selectedValue: preferences,
                         choiceItems: preferenze_caccia,
                         onChange: (state) {
-                          preferences = state.value.toString() ?? 'GRD';
-                          setState(() => preferences = state.value .toString()?? 'GRD');
+                          preferences = state.value.toString() ;
+                          setState(() => preferences = state.value .toString());
                           },
 
                         modalHeaderStyle: const S2ModalHeaderStyle(
@@ -202,7 +202,7 @@ class _first_preferencesState extends State<first_preferences> {
                         title: 'Platform',
                         selectedValue: platform,
                         choiceItems: piattaforma,
-                        onChange: (state) {platform = state.value.toString() ?? 'NS';setState(() => platform = state.value.toString());},
+                        onChange: (state) {platform = state.value.toString();setState(() => platform = state.value.toString());},
 
                         modalHeaderStyle: const S2ModalHeaderStyle(
                             textStyle: TextStyle(color: Colors.white)
