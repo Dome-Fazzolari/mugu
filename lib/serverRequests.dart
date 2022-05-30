@@ -139,7 +139,6 @@ Future<Map<String,dynamic>> user(String user_id,String Server) async {
   http.Response response = await http
       .get(Uri.parse('http://$Server/mhgh_api/user.php?user_id=$user_id'));
   var risposta = Map<String,dynamic>();
-  print(response.statusCode);
   if (response.statusCode == 200) {
     Map<String, dynamic> json = jsonDecode(response.body);
     risposta['status'] = json['status'].toString();
@@ -169,7 +168,7 @@ Future<List<userTile>> search_hunt(String preferenza,String HRMinimo) async {
   var prefs = await SharedPreferences.getInstance();
   http.Response response = await http.get(
       Uri.parse(
-          'http://192.168.1.74/mhgh_api/search_hunt.php?preferenze_caccia=$preferenza&HR=$HRMinimo'),
+          'http://mugu.altervista.org/mhgh_api/search_hunt.php?preferenze_caccia=$preferenza&HR=$HRMinimo'),
       headers: {'Cookie': prefs.getString('PHPSESSID') ?? ''});
   Map<String, dynamic> json = jsonDecode(response.body);
   if (response.statusCode == 200) {
@@ -190,7 +189,7 @@ Future<List<userTile>> home() async {
   List<userTile> utenti = [];
   var prefs = await SharedPreferences.getInstance();
   http.Response response = await http.get(
-      Uri.parse('http://192.168.1.74/mhgh_api/home.php?'),
+      Uri.parse('http://mugu.altervista.org/mhgh_api/home.php?'),
       headers: {'Cookie': prefs.getString('PHPSESSID') ?? ''});
   Map<String, dynamic> json = jsonDecode(response.body);
   if (response.statusCode == 200) {
@@ -211,7 +210,7 @@ void add_favourites() async {
   String user_id = '1001';
   http.Response response = await http.get(
       Uri.parse(
-          'http://192.168.1.74/mhgh_api/add_favourites.php?add_user_id=$user_id'),
+          'http://mugu.altervista.org/mhgh_api/add_favourites.php?add_user_id=$user_id'),
       headers: {'Cookie': 'PHPSESSID=2qjkhcf6lr82tut7rhianigsji'});
 
   if (response.statusCode == 200) {

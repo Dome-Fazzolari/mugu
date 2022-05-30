@@ -173,7 +173,10 @@ stampaCarta(context,String arma,String HR,String username,String user_id) {
     child: Card(
       child: Row(
         children: [
-          Image(image: AssetImage('assets/weapon_logo/$arma.png'),height: 75,width: 75,),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Image(image: AssetImage('assets/weapon_logo/$arma.png'),height: 55,width: 55,),
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

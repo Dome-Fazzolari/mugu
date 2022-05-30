@@ -83,7 +83,7 @@ class _homePageState extends State<homePage> {
                   onTap: () async{
                     var prefs = await SharedPreferences.getInstance();
                     String sess = prefs.getString('PHPSESSID') ?? '';
-                    bool risultato = await logout('192.168.1.74', sess);
+                    bool risultato = await logout('mugu.altervista.org', sess);
                     if(risultato){
                       await prefs.clear();
                       Navigator.pushReplacement(context,

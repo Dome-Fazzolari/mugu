@@ -82,12 +82,12 @@ class _loginState extends State<login> {
                         if(mailController.text.isNotEmpty || passwordController.text.isNotEmpty){
                           var map = await sr.login(
                               mailController.text, passwordController.text,
-                              '192.168.1.74');
+                              'mugu.altervista.org');
                           if (map['status']?.compareTo('success') == 0) {
                             var prefs = await SharedPreferences.getInstance();
                             String cookie = map['cookie'] ?? '';
                             prefs.setString('PHPSESSID', cookie);
-                            var datiUtente = await sr.user(map['user_id'].toString(),'192.168.1.74');
+                            var datiUtente = await sr.user(map['user_id'].toString(),'mugu.altervista.org');
                             print(datiUtente['status']);
                             if(datiUtente['status'].toString().compareTo('success')==0){
 

@@ -357,7 +357,7 @@ class _editProfileState extends State<editProfile> {
                             int.parse(HRController.text),
                             platform,
                             prefs.getString('PHPSESSID') ?? '',
-                            '192.168.1.74'
+                            'mugu.altervista.org'
                         );
                         print(preferences);
                         if(editResult['status'].toString().compareTo('success') == 0){

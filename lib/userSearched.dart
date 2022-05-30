@@ -30,7 +30,6 @@ class _userSearchedState extends State<userSearched> {
 
   @override
   Widget build(BuildContext context) {
-    print('user: '+widget.user_id);
     return Scaffold(
       backgroundColor: Color(0XFF000F2C),
       appBar: AppBar(
@@ -130,7 +129,7 @@ class _userSearchedState extends State<userSearched> {
     precc['GRD'] = 'Grind';
     precc['GVH'] = 'Giving help';
     precc['SRH'] = 'Searching help';
-    var datiUtente = await sr.user(widget.user_id,'192.168.1.74');
+    var datiUtente = await sr.user(widget.user_id,'mugu.altervista.org');
     setState(() {
       username = datiUtente['username'];
       weapon = datiUtente['arma_preferita'];

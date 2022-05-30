@@ -309,7 +309,7 @@ class _first_preferencesState extends State<first_preferences> {
                           int.parse(HRController.text),
                           platform,
                           prefs.getString('cookie') ?? '',
-                          '192.168.1.74'
+                          'mugu.altervista.org'
                       );
                       if(editResult['status'].toString().compareTo('success') == 0){
                         var precc = Map<String,String>();
