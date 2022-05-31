@@ -18,7 +18,7 @@ class userTile{
 
 Future<bool> logout(String Server,String cookie)async{
   http.Response response = await http.post(
-      Uri.parse('http://$Server/mhgh_api/logout.php'),
+      Uri.parse('http://mugu.altervista.org/mhgh_api/logout.php'),
       headers: {'Cookie': '$cookie'});
   if(response.statusCode == 200){
     return true;
@@ -50,7 +50,7 @@ Future<Map<String,dynamic>> edit_profile(
   body['piattaforma'] = piattaforma;
 
   http.Response response = await http.post(
-      Uri.parse('http://$Server/mhgh_api/edit_profile.php'),
+      Uri.parse('http://mugu.altervista.org/mhgh_api/edit_profile.php'),
       body: body,
       headers: {'Cookie': '$cookie'});
   var risposta = jsonDecode(response.body);
@@ -73,7 +73,7 @@ Future<Map<String,dynamic>> signin(
   body['password'] = password;
 
   http.Response response = await http
-      .post(Uri.parse('http://$Server/mhgh_api/signin.php'), body: body);
+      .post(Uri.parse('http://mugu.altervista.org/mhgh_api/signin.php'), body: body);
   var risposta = jsonDecode(response.body);
   if (response.statusCode == 200) {
     String cookie = response.headers['set-cookie']?.split(';')[0] ?? '';
@@ -90,14 +90,13 @@ Future<Map<String,dynamic>> signin(
   return risposta;
 }
 
-Future<Map<String,String>> login(String email, String password, String Server) async {
+Future<Map<String,String>> login(String email, String password) async {
   var body = Map<String, dynamic>();
   body['email'] = email;
   body['password'] = password;
 
   http.Response response = await http
-      .post(Uri.parse('http://$Server/mhgh_api/login.php'), body: body);
-
+      .post(Uri.parse('http://mugu.altervista.org/mhgh_api/login.php'), body: body);
   if (response.statusCode == 200) {
     switch (jsonDecode(response.body)['status']) {
       case 'failed':
@@ -127,7 +126,7 @@ Future<Map<String,String>> login(String email, String password, String Server) a
 
 Future<bool> login_cookie(String Server, String Cookie) async {
   http.Response response = await http.post(
-      Uri.parse('http://$Server/mhgh_api/login.php'),
+      Uri.parse('http://mugu.altervista.org/mhgh_api/login.php'),
       headers: {'Cookie': Cookie});
 
   if (response.statusCode == 200) {
@@ -137,7 +136,7 @@ Future<bool> login_cookie(String Server, String Cookie) async {
 
 Future<Map<String,dynamic>> user(String user_id,String Server) async {
   http.Response response = await http
-      .get(Uri.parse('http://$Server/mhgh_api/user.php?user_id=$user_id'));
+      .get(Uri.parse('http://mugu.altervista.org/mhgh_api/user.php?user_id=$user_id'));
   var risposta = Map<String,dynamic>();
   if (response.statusCode == 200) {
     Map<String, dynamic> json = jsonDecode(response.body);

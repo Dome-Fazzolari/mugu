@@ -81,8 +81,7 @@ class _loginState extends State<login> {
                       Future.delayed(Duration.zero,()async{
                         if(mailController.text.isNotEmpty || passwordController.text.isNotEmpty){
                           var map = await sr.login(
-                              mailController.text, passwordController.text,
-                              'mugu.altervista.org');
+                              mailController.text, passwordController.text);
                           if (map['status']?.compareTo('success') == 0) {
                             var prefs = await SharedPreferences.getInstance();
                             String cookie = map['cookie'] ?? '';
